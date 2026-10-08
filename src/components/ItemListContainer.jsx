@@ -6,7 +6,7 @@ const ItemListContainer = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('productos.json')
+    fetch('/productos.json')
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
