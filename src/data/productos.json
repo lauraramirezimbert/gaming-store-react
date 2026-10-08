@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "nombre": "Teclado Mecánico RGB",
+    "precio": 15000,
+    "descripcion": "Teclado mecánico con iluminación RGB personalizable.",
+    "imagen": "/img/teclado.png"
+  },
+  {
+    "id": "2",
+    "nombre": "Mouse Óptico Pro",
+    "precio": 8500,
+    "descripcion": "Mouse ergonómico de alta precisión.",
+    "imagen": "/img/mouse.png"
+  },
+  {
+    "id": "3",
+    "nombre": "Monitor Curvo 144Hz",
+    "precio": 45000,
+    "descripcion": "Monitor curvo con tasa de refresco de 144Hz.",
+    "imagen": "/img/monitor.png"
+  },
+  {
+    "id": "4",
+    "nombre": "Silla Ergonómica Pro",
+    "precio": 60000,
+    "descripcion": "Silla diseñada para largas horas con soporte lumbar.",
+    "imagen": "/img/silla.png"
+  }
+]
