@@ -23,14 +23,15 @@ const Home = () => {
         borderBottom: '1px solid #222'
       }}>
         <div style={{ maxWidth: '550px', marginBottom: '30px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#00ffcc', marginBottom: '15px', fontWeight: 'bold' }}>
-            <Terminal size={20} /> NEXT-GEN GAMING GEAR
+          {/* Aquí se eliminó por completo el texto sobrante y el símbolo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#00ffcc', marginBottom: '15px' }}>
+            
           </div>
           <h1 style={{ fontSize: '3rem', margin: '0 0 20px 0', lineHeight: '1.2', fontWeight: '800', letterSpacing: '1px' }}>
             Elevá tu <span style={{ color: '#00ffcc', textShadow: '0 0 10px rgba(0,255,204,0.4)' }}>Rendimiento</span> al Máximo
           </h1>
           <p style={{ color: '#bbb', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '30px' }}>
-            Hardware de alta gama, componentes optimizados para e-sports y periféricos diseñados para gamers que no aceptan perder.
+            Hardware de alta gama, componentes optimizados y periféricos diseñados para gamers que no aceptan perder.
           </p>
           <Link 
             to="/productos" 
