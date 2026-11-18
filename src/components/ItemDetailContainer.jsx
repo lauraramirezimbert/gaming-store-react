@@ -14,21 +14,19 @@ const STOCK = 10;
 
 const ItemDetailContainer = () => {
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [loadedId, setLoadedId] = useState(null);
+  const [addedProductId, setAddedProductId] = useState(null);
 
   const { id } = useParams();
   const { addToCart } = useCart();
 
-  useEffect(() => {
-    const docRef = doc(db, 'productos', id);
-    let active = true;
+  const loading = loadedId !== id;
+  const added = addedProductId === id;
 
-    setLoading(true);
-    setError(false);
-    setProduct(null);
-    setAdded(false);
+  useEffect(() => {
+    let active = true;
+    const docRef = doc(db, 'productos', id);
 
     getDoc(docRef)
       .then((snapshot) => {
@@ -39,13 +37,17 @@ const ItemDetailContainer = () => {
         } else {
           setProduct(null);
         }
+
+        setError(false);
+        setLoadedId(id);
       })
       .catch((error) => {
         console.error('Error al obtener el producto:', error);
-        if (active) setError(true);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
+
+        if (active) {
+          setError(true);
+          setLoadedId(id);
+        }
       });
 
     return () => {
@@ -56,7 +58,7 @@ const ItemDetailContainer = () => {
   const handleOnAdd = (quantity) => {
     if (!product) return;
     addToCart({ ...product, stock: STOCK }, quantity);
-    setAdded(true);
+    setAddedProductId(id);
   };
 
   if (loading) {

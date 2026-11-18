@@ -6,7 +6,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ShoppingBag, User, Phone, Mail, ShieldCheck, CheckCircle2, ArrowRight, Package, ShoppingCart } from 'lucide-react';
+import { ShoppingBag, User, Phone, Mail, ShieldCheck, CheckCircle2, ArrowRight, ShoppingCart } from 'lucide-react';
 import PageMeta from './PageMeta';
 
 const Checkout = () => {
