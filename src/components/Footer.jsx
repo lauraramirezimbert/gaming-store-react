@@ -1,3 +1,4 @@
+
 const Footer = () => {
   return (
     <footer style={{ background: '#111', color: '#fff', padding: '30px 20px', marginTop: '40px', textAlign: 'center' }}>
@@ -6,7 +7,7 @@ const Footer = () => {
         <p style={{ color: '#aaa', fontSize: '14px' }}>Tu tienda de confianza para componentes y accesorios gaming.</p>
       </div>
 
-      <h4 style={{ marginBottom: '15px', color: '#007bff' }}>Equipo de Desarrollo</h4>
+      <h4 style={{ marginBottom: '15px', color: '#00ffcc' }}>Equipo de Desarrollo</h4>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '20px' }}>
         <div style={{ background: '#222', padding: '10px 15px', borderRadius: '6px', width: '150px' }}>
           <p style={{ fontWeight: 'bold', margin: '0' }}>Laura Ramírez</p>

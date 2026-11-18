@@ -18,7 +18,12 @@ const NavBar = () => {
       gap: '15px'
     }}>
       <h1 style={{ margin: 0, fontSize: '22px' }}>
-        GAMING STORE
+        <Link
+          to="/"
+          style={{ color: '#00ffcc', textDecoration: 'none' }}
+        >
+          GAMING STORE
+        </Link>
       </h1>
 
       <nav>
@@ -62,9 +67,7 @@ const NavBar = () => {
           </li>
 
           <li>
-            <Link to="/carrito" style={{ textDecoration: 'none' }}>
-              <CartWidget />
-            </Link>
+            <CartWidget />
           </li>
         </ul>
       </nav>

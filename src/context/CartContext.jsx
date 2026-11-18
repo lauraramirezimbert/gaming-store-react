@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import CartContext from './CartContextValue';
 
@@ -8,6 +9,8 @@ export const CartProvider = ({ children }) => {
     if (quantity <= 0) return;
 
     setCart((currentCart) => {
+      const stock = Number(item.stock ?? 10);
+
       const existingProduct = currentCart.find(
         (product) => product.id === item.id
       );
@@ -15,22 +18,41 @@ export const CartProvider = ({ children }) => {
       if (existingProduct) {
         return currentCart.map((product) =>
           product.id === item.id
-            ? { ...product, quantity: product.quantity + quantity }
+            ? {
+                ...product,
+                stock,
+                quantity: Math.min(
+                  product.quantity + quantity,
+                  stock
+                )
+              }
             : product
         );
       }
 
-      return [...currentCart, { ...item, quantity }];
+      return [
+        ...currentCart,
+        {
+          ...item,
+          stock,
+          quantity: Math.min(quantity, stock)
+        }
+      ];
     });
   };
 
   const increaseQuantity = (id) => {
     setCart((currentCart) =>
-      currentCart.map((product) =>
-        product.id === id
-          ? { ...product, quantity: product.quantity + 1 }
-          : product
-      )
+      currentCart.map((product) => {
+        if (product.id !== id) return product;
+
+        const stock = Number(product.stock ?? 10);
+
+        return {
+          ...product,
+          quantity: Math.min(product.quantity + 1, stock)
+        };
+      })
     );
   };
 
