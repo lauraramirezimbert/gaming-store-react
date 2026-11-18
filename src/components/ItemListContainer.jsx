@@ -1,88 +1,219 @@
+
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
+import { Container, Row, Col, Card, Form, Button, Spinner } from 'react-bootstrap';
+import styled from 'styled-components';
+import { FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { db } from '../firebase';
+import PageMeta from './PageMeta';
+
+const PRODUCTS_PER_PAGE = 8;
+
+const CatalogTitle = styled.h2`
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+`;
+
+const SearchWrapper = styled.div`
+  max-width: 500px;
+  margin: 0 auto 30px;
+  position: relative;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #777;
+  }
+
+  input {
+    padding-left: 42px;
+    border-radius: 25px;
+  }
+`;
+
+const ProductCard = styled(Card)`
+  height: 100%;
+  background-color: #1c1c2b;
+  color: white;
+  border: 1px solid #34344a;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  img {
+    height: 190px;
+    object-fit: contain;
+    padding: 12px;
+    background-color: #ffffff;
+  }
+`;
+
+const ProductName = styled(Card.Title)`
+  min-height: 48px;
+  font-size: 1rem;
+`;
+
+const Price = styled.p`
+  color: #a78bfa;
+  font-size: 1.2rem;
+  font-weight: 700;
+`;
+
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 35px 0;
+  color: white;
+`;
 
 const ItemListContainer = () => {
   const [products, setProducts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchProductsFromFirestore = async () => {
+    const getProducts = async () => {
       try {
+        setLoading(true);
+        setError('');
+
         const querySnapshot = await getDocs(collection(db, 'productos'));
-        const items = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
+        const productsList = querySnapshot.docs.map((document) => ({
+          id: document.id,
+          ...document.data(),
         }));
-        setProducts(items);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError(true);
+
+        setProducts(productsList);
+      } catch {
+        setError('No se pudieron cargar los productos. Intentá nuevamente.');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchProductsFromFirestore();
+    getProducts();
   }, []);
 
-  // Filtro en tiempo real basado en la búsqueda
-  const filteredProducts = products.filter((prod) =>
-    prod.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter((product) =>
+    String(product.nombre || '').toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) {
-    return <p style={{ textAlign: 'center', padding: '50px', color: '#00ffcc' }}>Cargando productos...</p>;
-  }
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
-  if (error) {
-    return <p style={{ textAlign: 'center', padding: '50px', color: '#ff4d4d' }}>Error al cargar los productos.</p>;
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + PRODUCTS_PER_PAGE
+  );
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    setCurrentPage(1);
+  };
+
+  if (loading) {
+    return (
+      <Container className="text-center py-5">
+        <PageMeta
+          title="Catálogo de videojuegos"
+          description="Explorá nuestro catálogo de videojuegos y encontrá tus próximos juegos favoritos en Gaming Store."
+        />
+        <Spinner animation="border" variant="light" />
+        <p className="text-white mt-3">Cargando productos...</p>
+      </Container>
+    );
   }
 
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h2>Catálogo de Productos</h2>
+    <Container className="py-5">
+      <PageMeta
+        title="Catálogo de videojuegos"
+        description="Explorá nuestro catálogo de videojuegos y encontrá tus próximos juegos favoritos en Gaming Store."
+      />
 
-      {/* BARRA DE BÚSQUEDA */}
-      <div style={{ margin: '20px 0' }}>
-        <input
+      <CatalogTitle>Nuestro catálogo</CatalogTitle>
+
+      <SearchWrapper>
+        <FaSearch />
+        <Form.Control
           type="text"
-          placeholder="Buscar producto..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ 
-            padding: '10px 15px', 
-            width: '100%', 
-            maxWidth: '350px', 
-            borderRadius: '6px', 
-            border: '1px solid #444', 
-            background: '#1e1e1e', 
-            color: '#fff',
-            fontSize: '16px' 
-          }}
+          placeholder="Buscar videojuegos..."
+          value={search}
+          onChange={(event) => handleSearch(event.target.value)}
         />
-      </div>
+      </SearchWrapper>
 
-      <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '20px' }}>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((prod) => (
-            <div key={prod.id} style={{ border: '1px solid #444', padding: '15px', borderRadius: '8px', width: '220px', background: '#1e1e1e' }}>
-              <img src={prod.imagen} alt={prod.nombre} style={{ width: '100%', height: '120px', objectFit: 'contain', background: '#000', borderRadius: '4px' }} />
-              <h3 style={{ fontSize: '16px', margin: '10px 0', color: '#fff' }}>{prod.nombre}</h3>
-              <p style={{ color: '#00ffcc', fontWeight: 'bold' }}>${prod.precio}</p>
-              <Link to={`/producto/${prod.id}`} style={{ background: '#00ffcc', color: '#121212', padding: '8px 12px', textDecoration: 'none', borderRadius: '4px', display: 'inline-block', marginTop: '10px', fontWeight: 'bold' }}>
-                Ver Detalle
-              </Link>
-            </div>
-          ))
-        ) : (
-          <p style={{ color: '#aaa', marginTop: '20px' }}>No se encontraron productos que coincidan con la búsqueda.</p>
-        )}
-      </div>
-    </div>
+      {error && <p className="text-danger text-center">{error}</p>}
+
+      {!error && filteredProducts.length === 0 && (
+        <p className="text-white text-center">
+          No se encontraron productos.
+        </p>
+      )}
+
+      <Row className="g-4">
+        {currentProducts.map((product) => (
+          <Col key={product.id} xs={12} sm={6} md={4} lg={3}>
+            <ProductCard>
+              <Card.Img
+                variant="top"
+                src={product.imagen}
+                alt={product.nombre}
+              />
+              <Card.Body className="d-flex flex-column">
+                <ProductName>{product.nombre}</ProductName>
+                <Price>${product.precio}</Price>
+                <Button
+                  as={Link}
+                  to={`/producto/${product.id}`}
+                  variant="primary"
+                  className="mt-auto"
+                >
+                  Ver detalle
+                </Button>
+              </Card.Body>
+            </ProductCard>
+          </Col>
+        ))}
+      </Row>
+
+      {totalPages > 1 && (
+        <PaginationWrapper>
+          <Button
+            variant="outline-light"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            aria-label="Página anterior"
+          >
+            <FaChevronLeft />
+          </Button>
+
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+
+          <Button
+            variant="outline-light"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+            aria-label="Página siguiente"
+          >
+            <FaChevronRight />
+          </Button>
+        </PaginationWrapper>
+      )}
+    </Container>
   );
 };
 

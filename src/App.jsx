@@ -1,21 +1,21 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import NavBar from './components/NavBar'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
 import Home from './components/Home';
 import ItemListContainer from './components/ItemListContainer';
-import ItemDetailContainer from './components/ItemDetailContainer'; 
-import Cart from './components/Cart'; 
-import Checkout from './components/Checkout'; 
+import ItemDetailContainer from './components/ItemDetailContainer';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
 import Login from './components/Login';
-import Footer from './components/Footer'; // 1. Importas el Footer que armaste
+import Admin from './components/Admin';
+import Profile from './components/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
+import UserProtectedRoute from './components/UserProtectedRoute';
 
 function App() {
   return (
     <Router>
-      <NavBar />
-
-      <main>
+      <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/productos" element={<ItemListContainer />} />
@@ -24,11 +24,28 @@ function App() {
           <Route path="/carrito" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
+
+          <Route
+            path="/perfil"
+            element={
+              <UserProtectedRoute>
+                <Profile />
+              </UserProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="*" element={<Home />} />
         </Routes>
-      </main>
-
-      <Footer /> {}
+      </Layout>
     </Router>
   );
 }
