@@ -1,4 +1,5 @@
 
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './components/Home';
@@ -9,6 +10,7 @@ import Checkout from './components/Checkout';
 import Login from './components/Login';
 import Admin from './components/Admin';
 import Profile from './components/Profile';
+import Nosotros from './components/Nosotros';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserProtectedRoute from './components/UserProtectedRoute';
 
@@ -19,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/productos" element={<ItemListContainer />} />
+          <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/categoria/:idCategoria" element={<ItemListContainer />} />
           <Route path="/producto/:id" element={<ItemDetailContainer />} />
           <Route path="/carrito" element={<Cart />} />

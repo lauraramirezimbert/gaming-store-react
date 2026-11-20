@@ -49,6 +49,12 @@ const NavBar = () => {
           </li>
 
           <li>
+            <Link to="/nosotros" style={{ color: '#fff', textDecoration: 'none' }}>
+              Nosotros
+            </Link>
+          </li>
+
+          <li>
             {user ? (
               <Link
                 to="/perfil"
